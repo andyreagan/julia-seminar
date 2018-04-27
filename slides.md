@@ -98,6 +98,7 @@ What you might expect...
 - Arrays
 - Matrices
 - Sparse versions
+
 Define your own!
 
 ----
@@ -321,9 +322,120 @@ Int64
 
 ---
 
+## DS with Julia
+
+Ingredients:
+
+- Data
+- Model fitting
+
+
+----
+
+## DataFrames.jl
+
+```julia
+julia> data = DataFrame(X=[1,2,3], Y=[2,4,7])
+3x2 DataFrame
+|-------|---|---|
+| Row # | X | Y |
+| 1     | 1 | 2 |
+| 2     | 2 | 4 |
+| 3     | 3 | 7 |
+```
+
+----
+
+```julia
+julia> using DataFrames, CSV
+
+julia> iris = CSV.read(joinpath(Pkg.dir("DataFrames"), "test/data/iris.csv"));
+
+julia> head(iris)
+6×5 DataFrames.DataFrame
+│ Row │ SepalLength │ SepalWidth │ PetalLength │ PetalWidth │ Species │
+├─────┼─────────────┼────────────┼─────────────┼────────────┼─────────┤
+│ 1   │ 5.1         │ 3.5        │ 1.4         │ 0.2        │ setosa  │
+│ 2   │ 4.9         │ 3.0        │ 1.4         │ 0.2        │ setosa  │
+│ 3   │ 4.7         │ 3.2        │ 1.3         │ 0.2        │ setosa  │
+│ 4   │ 4.6         │ 3.1        │ 1.5         │ 0.2        │ setosa  │
+│ 5   │ 5.0         │ 3.6        │ 1.4         │ 0.2        │ setosa  │
+│ 6   │ 5.4         │ 3.9        │ 1.7         │ 0.4        │ setosa  │
+```
+
+----
+
+```julia
+julia> using RDatasets
+
+julia> form = dataset("datasets", "Formaldehyde")
+6x2 DataFrame
+|-------|------|--------|
+| Row # | Carb | OptDen |
+| 1     | 0.1  | 0.086  |
+| 2     | 0.3  | 0.269  |
+| 3     | 0.5  | 0.446  |
+| 4     | 0.6  | 0.538  |
+| 5     | 0.7  | 0.626  |
+| 6     | 0.9  | 0.782  |
+```
+
+Also, `read_rda` function to read directly.
+
+----
+
+### Functionality
+
+- `size()`, `head()`, `tail()`
+- `nrow()`, `ncol()`, `length()`
+- `describe()`
+- `showcols()`
+- `names()`, `eltypes()`, `names!()`
+- `Missing`
+- `merge!()`, `hcat()`, `insert!()`...
+- `map`, `groupby`
+- etc...
+
+----
+
+## Modeling
+
+- GLM: GLM.jl
+- MixedModels: MixedModels.jl
+- Decision Trees: DecisionTree.jl (yes, boosting too)
+- Deep Learning: Knet, Flux, Mocha
+
+Quick example next.
+
+
+----
+
+```julia
+julia> OLS = glm(@formula(Y ~ X), data, Normal(), IdentityLink())
+DataFrameRegressionModel{GeneralizedLinearModel,Float64}:
+
+Coefficients:
+              Estimate Std.Error  z value Pr(>|z|)
+(Intercept)  -0.666667   0.62361 -1.06904   0.2850
+X                  2.5  0.288675  8.66025   <1e-17
+
+julia> stderr(OLS)
+2-element Array{Float64,1}:
+ 0.62361
+ 0.288675
+
+julia> predict(OLS)
+3-element Array{Float64,1}:
+ 1.83333
+ 4.33333
+ 6.83333
+```
+
+---
+
 ## Major weaknesses
 
-Weak spot for me: dataframes.jl not as flexible as Pandas or dplyr (yet)...
+Weak spot for me: dataframes.jl clunkier than Pandas, much clunkier than dplyr...
 
 ---
 
@@ -331,7 +443,7 @@ Weak spot for me: dataframes.jl not as flexible as Pandas or dplyr (yet)...
 
 Just so much fun.
 
-Not a primary language for data manipulation, but can build models fast!
+Not a primary language for data manipulation/exploration for me, but can build models fast!
 
 ---
 
